@@ -1,0 +1,246 @@
+{
+ "schema": "census-fingerprint-v1",
+ "utc": "2026-10-14T13:01:33Z",
+ "method": "size + mid-8MB md5",
+ "models": {
+  "facebook/dinov2-base": {
+   "f9e44c814b77203eaa57a6bdbbd535f21ede1415/preprocessor_config.json": {
+    "size": 436
+   },
+   "f9e44c814b77203eaa57a6bdbbd535f21ede1415/config.json": {
+    "size": 548
+   },
+   "f9e44c814b77203eaa57a6bdbbd535f21ede1415/model.safetensors": {
+    "size": 346345912,
+    "mid8m_md5": "bc420c74f95f"
+   }
+  },
+  "facebook/dinov2-large": {
+   "local0001/preprocessor_config.json": {
+    "size": 436
+   },
+   "local0001/config.json": {
+    "size": 549
+   },
+   "local0001/model.safetensors": {
+    "size": 1217522888,
+    "mid8m_md5": "66c164563165"
+   }
+  },
+  "facebook/dinov2-small": {
+   "local0001/preprocessor_config.json": {
+    "size": 436
+   },
+   "local0001/config.json": {
+    "size": 547
+   },
+   "local0001/model.safetensors": {
+    "size": 88249960,
+    "mid8m_md5": "a257e7978d50"
+   }
+  },
+  "facebook/vit-mae-base": {
+   "25b184bea5538bf5c4c852c79d221195fdd2778d/preprocessor_config.json": {
+    "size": 217
+   },
+   "25b184bea5538bf5c4c852c79d221195fdd2778d/config.json": {
+    "size": 676
+   },
+   "25b184bea5538bf5c4c852c79d221195fdd2778d/model.safetensors": {
+    "size": 447670680,
+    "mid8m_md5": "cc636a50fa18"
+   }
+  },
+  "facebook/webssl-dino300m-full2b-224": {
+   "8529cdb3fb75014932af3b896455fc21c386168e/config.json": {
+    "size": 1109,
+    "mid8m_md5": "7d4bb7864b27"
+   },
+   "8529cdb3fb75014932af3b896455fc21c386168e/model.safetensors": {
+    "size": 1214669720,
+    "mid8m_md5": "734f831769cf"
+   }
+  },
+  "google/siglip-base-patch16-224": {
+   "local0001/special_tokens_map.json": {
+    "size": 409
+   },
+   "local0001/preprocessor_config.json": {
+    "size": 368
+   },
+   "local0001/tokenizer.json": {
+    "size": 2399357,
+    "mid8m_md5": "0a529ab16650"
+   },
+   "local0001/config.json": {
+    "size": 432
+   },
+   "local0001/model.safetensors.aria2": {
+    "size": 175
+   },
+   "local0001/model.safetensors": {
+    "size": 812672320,
+    "mid8m_md5": "7800f1ce0e80"
+   },
+   "local0001/tokenizer_config.json": {
+    "size": 711
+   }
+  },
+  "google/siglip-so400m-patch14-384": {
+   "local0001/special_tokens_map.json": {
+    "size": 409
+   },
+   "local0001/preprocessor_config.json": {
+    "size": 368
+   },
+   "local0001/config.json": {
+    "size": 576
+   },
+   "local0001/model.safetensors": {
+    "size": 3511950624,
+    "mid8m_md5": "6c350defe593"
+   },
+   "local0001/tokenizer_config.json": {
+    "size": 711
+   }
+  },
+  "google/siglip2-base-patch16-224": {
+   "local0001/special_tokens_map.json": {
+    "size": 636
+   },
+   "local0001/preprocessor_config.json": {
+    "size": 394
+   },
+   "local0001/tokenizer.json": {
+    "size": 34363039,
+    "mid8m_md5": "4f8078cbe46e"
+   },
+   "local0001/config.json": {
+    "size": 253
+   },
+   "local0001/model.safetensors.aria2": {
+    "size": 297
+   },
+   "local0001/model.safetensors": {
+    "size": 1500800904,
+    "mid8m_md5": "302198ee0c65"
+   },
+   "local0001/tokenizer_config.json": {
+    "size": 47164,
+    "mid8m_md5": "620bc086b27f"
+   }
+  },
+  "laion/CLIP-ViT-B-16-laion2B-s34B-b88K": {
+   "local0001/tokenizer.json": {
+    "size": 2224053,
+    "mid8m_md5": "983d95a7ba2f"
+   },
+   "local0001/open_clip_model.safetensors": {
+    "size": 598516980,
+    "mid8m_md5": "a2ab16cb9e07"
+   },
+   "local0001/merges.txt": {
+    "size": 524657,
+    "mid8m_md5": "4e1c1fb0d44d"
+   },
+   "local0001/open_clip_config.json": {
+    "size": 469
+   },
+   "local0001/open_clip_model.safetensors.aria2": {
+    "size": 170
+   },
+   "local0001/vocab.json": {
+    "size": 862328,
+    "mid8m_md5": "0696eca5cb3d"
+   }
+  },
+  "microsoft/beit-base-patch16-224": {
+   "local0001/preprocessor_config.json": {
+    "size": 276
+   },
+   "local0001/config.json": {
+    "size": 69889,
+    "mid8m_md5": "3ff6da43d890"
+   },
+   "local0001/model.safetensors": {
+    "size": 349877750,
+    "mid8m_md5": "93acb2ac1d0a"
+   }
+  },
+  "stabilityai/sd-vae-ft-mse": {
+   "local0001/config.json": {
+    "size": 547
+   },
+   "local0001/diffusion_pytorch_model.safetensors": {
+    "size": 334643276,
+    "mid8m_md5": "5a00838bd8a8"
+   }
+  },
+  "timm/efficientnet_b3.ra2_in1k": {
+   "local0001/preprocessor_config.json": {
+    "size": 15
+   },
+   "local0001/config.json": {
+    "size": 639
+   },
+   "local0001/model.safetensors": {
+    "size": 49335454,
+    "mid8m_md5": "41146b8d0b3e"
+   }
+  },
+  "timm/resnet18.tv_in1k": {
+   "local0001/preprocessor_config.json": {
+    "size": 15
+   },
+   "local0001/config.json": {
+    "size": 645
+   },
+   "local0001/model.safetensors": {
+    "size": 46807446,
+    "mid8m_md5": "5b1e430eae53"
+   }
+  },
+  "timm/resnet50.tv_in1k": {
+   "local0001/preprocessor_config.json": {
+    "size": 15
+   },
+   "local0001/config.json": {
+    "size": 646
+   },
+   "local0001/model.safetensors": {
+    "size": 102469840,
+    "mid8m_md5": "7ad2d0ee8b67"
+   }
+  },
+  "timm/vit_base_patch16_224.dino": {
+   "local0001/preprocessor_config.json": {
+    "size": 15
+   },
+   "local0001/config.json": {
+    "size": 577
+   },
+   "local0001/model.safetensors.aria2": {
+    "size": 199
+   },
+   "local0001/model.safetensors": {
+    "size": 343208550,
+    "mid8m_md5": "167a772cc347"
+   }
+  },
+  "timm/vit_small_patch16_224.dino": {
+   "local0001/preprocessor_config.json": {
+    "size": 15
+   },
+   "local0001/config.json": {
+    "size": 578
+   },
+   "local0001/model.safetensors.aria2": {
+    "size": 109
+   },
+   "local0001/model.safetensors": {
+    "size": 86676340,
+    "mid8m_md5": "ac53ec5f48e2"
+   }
+  }
+ }
+}
