@@ -1,0 +1,36 @@
+{
+ "schema": "nanowm-race10k-protocol-v1",
+ "registered_at": "2026-10-04 晚（赛马启动前注册；四臂@2k 读数已知，10k 读数未产出）",
+ "context": "aux@10k 与 SufWM+aux@10k 两臂，webdino+b1_semantic，seed 3407，max_steps=10000；仪器=eval_harness.py 冻结九探针 v1（与四臂@2k 同款）；SufWM 参照=历史@10k 0.157",
+ "governance": "单种子方向性；连线：P5a 高带→翻转版判据 a 强化（全量仍需整程 F>1）；P5a 低带→SufWM 主干地位稳固，aux 进机制讨论；P5c→处方家族化叙事",
+ "rows": [
+  {
+   "id": "P5a",
+   "name": "aux@10k race vs SufWM",
+   "prediction": "F(aux@10k) 三段带：>0.157=aux 赢得赛马（翻转版判据 a 强支持）；[0.05,0.157]=早期转化但低于 SufWM（前置起效/低平台型）；<0.05=aux 熄火（自熄梯度假说兑现：动作预测头学会后 λ∇aux→0）",
+   "criterion": "三分带如左；参照 SufWM@10k=0.157（历史，同协议）",
+   "status": "pre-registered"
+  },
+  {
+   "id": "P5b",
+   "name": "saturation shape",
+   "prediction": "若 P5a 落中/低带，检查增长形状：F(aux@10k)/F(aux@2k) 显著小于 SufWM 的 0.157/2.4e-7 型后期陡升——即 aux 曲线前倾、SufWM 曲线后倾",
+   "criterion": "描述性，比值对比 SufWM 轨迹（0.0017@基线→0.157@10k 无 2k 中间点，判读保守化：只比 aux 自身 2k→10k 增长倍数 vs 8×（0.0208×8≈0.166=SufWM 水平））",
+   "status": "pre-registered"
+  },
+  {
+   "id": "P5c",
+   "name": "stack dominance",
+   "prediction": "F(SufWM+aux 叠加臂@10k) ≥ max(F(aux@10k), 0.157)——模式混合（结构性压力）+辅助梯度（前置压力）互补",
+   "criterion": "叠加臂 ≥ 两单一臂（含历史的 0.157）；若 < 两者则记「干预互扰」，同为机制素材",
+   "status": "pre-registered"
+  },
+  {
+   "id": "P5d",
+   "name": "anomaly follow-up",
+   "prediction": "aux 系臂 within_var≈0.44（vs 非 aux 0.95）若在 10k 持续——模型预测分布质变（更确定）为稳定现象而非 2k 暂态；探针 gap 量级同步观察",
+   "criterion": "within_var@10k 与 @2k 同侧即「稳定现象」；翻回 0.95 则 2k 读数为暂态、0.0208 的解释须弱化",
+   "status": "pre-registered"
+  }
+ ]
+}

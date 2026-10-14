@@ -1,0 +1,32 @@
+{
+  "protocol_version": "frozen-v1",
+  "date_frozen": "2026-09-21",
+  "description": "阶段一冻结协议：固定动作探针集 + 显式种子表。所有 F-ratio 数字自此只从本协议产出。",
+  "num_clips": 16,
+  "num_sampling_steps": 50,
+  "variant_seeds": [0, 1],
+  "noise_seeds": [1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009],
+  "shuffled_perm_seed": 20260921,
+  "probes": [
+    {"name": "gt", "type": "gt"},
+    {"name": "zeros", "type": "zeros"},
+    {"name": "shuffled", "type": "shuffled"},
+    {"name": "reversed", "type": "reversed"},
+    {"name": "const_hold", "type": "const_hold"},
+    {"name": "scaled_0.5", "type": "scaled", "factor": 0.5},
+    {"name": "scaled_2.0", "type": "scaled", "factor": 2.0},
+    {"name": "plus_q95", "type": "axis_q95", "sign": 1.0},
+    {"name": "minus_q95", "type": "axis_q95", "sign": -1.0}
+  ],
+  "fast_override": {
+    "num_clips": 4,
+    "num_sampling_steps": 10,
+    "variant_seeds": [0],
+    "noise_seeds": [1000, 1001, 1002],
+    "probes": [
+      {"name": "gt", "type": "gt"},
+      {"name": "zeros", "type": "zeros"},
+      {"name": "shuffled", "type": "shuffled"}
+    ]
+  }
+}

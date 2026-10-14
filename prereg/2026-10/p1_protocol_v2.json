@@ -1,0 +1,116 @@
+{
+  "schema": "nanowm-p1-protocol-v2",
+  "protocol_version": "p1-v2.1",
+  "frozen_date": "2026-09-30 深夜（用户确认内容后冻结）",
+  "doc": "研究文档/L15_归因探针协议_v2整合版_2026-09-30.md",
+  "inherits": "p0-v0.2 的数据采样/编码调用/种子（同数据可比）；探针侧统计纪律继承 eval protocol v1",
+
+  "seeds": {
+    "sample": 20260930,
+    "torch_action_head": 20260930,
+    "torch_null_head": 20260931,
+    "permutation": 20260930,
+    "permutation_val": 20260931,
+    "seed_spread": [0, 1, 2],
+    "split_offset": 101
+  },
+
+  "wards": {
+    "pusht": {"interval": 5, "native_action_dim": 2, "stride": 6, "cap_per_ep": 20,
+              "n_episodes": 96, "n_val_episodes": 20, "state_dim": 7,
+              "codecs": ["sd_vae", "webdino", "vjepa2_1", "dinov2*", "clip*"]},
+    "apex": {"interval": 8, "native_action_dim": 16, "min_seg_len_mult": 2,
+             "stride": 8, "cap_per_seg": 64, "n_segments": 32, "val_frac_quarter": true,
+             "mouse_scale": 1.0, "state": "proxy:scene_displacement",
+             "codecs": ["sd_vae"]}
+  },
+  "codec_note": "* 号 = timm/HF 通用适配器 v0（仅探针用；形状首次运行时验证，失败则记日志跳过）；训练级 codec 仍需仓库适配器。",
+
+  "snr_fast": {
+    "method": "闭式岭 OLS（无迭代无种子）",
+    "lambda": "1e-4 * trace(X^T X)/d",
+    "tiers": ["a", "a_x_zpool16"],
+    "targets": ["delta_z", "delta_state", "delta_scene_disp(apex)"],
+    "spectrum_bins": 5,
+    "report": ["A_lin", "SNR=A/(1-A)", "per-bin A_lin", "cross-tier jump"]
+  },
+
+  "l15_full": {
+    "head": {
+      "trunk": "Conv3x s2 ×3 (64,128,256) + GN + GELU",
+      "action_gate": "FiLM: a→MLP(128)→per-channel gamma,beta",
+      "flow_head": "Conv→2ch 上采样×3（归一化坐标偏移，clamp ±0.5）",
+      "residual_head": "Conv→C ch 上采样×3 + 3x3 refine",
+      "output": "Δ̂ = grid_sample(z_t, id+φ) − z_t + r",
+      "variants": {"linear": "pool(z_t)⊕a → Linear", "flowhead": "如上",
+                   "flowhead_big": "通道×2"},
+      "optimizer": "adam lr1e-3 cosine bs128 epochs150"
+    },
+    "nulls": {"primary": "permutation", "secondary": "zero", "auxiliary": "noise"},
+    "stats": {"n_seeds": 3, "n_splits": 2, "bootstrap": 1000,
+              "decomposition": "[prior=1-L_null, action=L_null-L_act, unexplained=L_act]",
+              "alarms": ["分量越 [0,1] 超 CI 半宽", "置换零假设非零 >2σ",
+                         "train/val 损失差 >2×"]},
+    "learning_curve_epochs": [10, 25, 50, 100, 150]
+  },
+
+  "vrepr": {
+    "head": "同 l15 trunk+FiLM → pooled → MLP(state_dim)；两头同构同预算",
+    "apex_proxy": {"method": "phase_correlation",
+                   "crop": "中心 70%", "subpixel": false,
+                   "hud_note": "菜单/过场/读条已由数据侧清洗剔除（boundary_mask/frame_valid）",
+                   "peak_score": "记日志，不当门槛"}
+  },
+
+  "dose_formula": {
+    "gate_L1": "RMI 判死 → 不开药（C1 归 L1）",
+    "gate_snr": "SNR_lin < theta_s → 转上级仲裁",
+    "p_aonly_init": "clip(c1 * V_repr, 0.1, 0.5)",
+    "anneal_horizon": "c2 * tau * kappa   [A-only 样本数]",
+    "tau_closed_form": "tau = c_tau * d_eff / SNR_lin   [探针样本数]",
+    "tau_validation": "与 l15 学习曲线的经验 τ 同数量级为通过（验证非来源）",
+    "cap": "总模式预算 ≤ β 闭式（先例核查结案后填表达式）"
+  },
+
+  "constants_preregistered": {
+    "c1": 2.5,
+    "c2": 1.0,
+    "c_tau": 30.0,
+    "kappa": 1.0,
+    "theta_s": 0.02,
+    "note": "初值冻结，跨病房同一组，全报告；新增 4 病房为 out-of-sample 验证集；不得逐房调参"
+  },
+
+  "p1b_v1": {
+    "interventions": ["permutation(primary)", "zero(secondary)"],
+    "t_bands": [[0,200],[200,400],[400,600],[600,800],[800,1000]],
+    "n_batches": 8,
+    "batch_size": 16,
+    "grad_cosine": {"action_branch": "全向量跨 batch 余弦矩阵均值",
+                    "rest": "固定随机投影到 4096 维（种子 20260930）后同法"},
+    "ckpts": [
+      ["vae1_10k",  "/root/autodl-fs/nanowm/ckpts/20260913_230007-NanoWM-B-2-F4S5-pusht/checkpoints/latest/latest-epoch=0-step=10000.ckpt"],
+      ["vae1_18k",  "/root/autodl-fs/nanowm/ckpts/midpoint_20260914/snap_1_baseline_step18000.ckpt"],
+      ["vae1_20k",  "/root/autodl-fs/nanowm/ckpts/midpoint_20260914/snap_1_baseline_step20000.ckpt"],
+      ["dino1_10k", "/root/autodl-fs/nanowm/ckpts/20260915_101703-NanoWM-B-1-Semantic-F4S5-pusht/checkpoints/latest/latest-epoch=0-step=10000.ckpt"],
+      ["dinosuf_10k", "/root/autodl-fs/nanowm/ckpts/20260921_230201-NanoWM-B-1-Semantic-F4S5-pusht/checkpoints/latest/latest-epoch=0-step=10000.ckpt"]
+    ],
+    "ckpt_config_override": {
+      "vae1_18k": "/root/autodl-fs/nanowm/ckpts/midpoint_20260914/ck1_run/config.yaml",
+      "vae1_20k": "/root/autodl-fs/nanowm/ckpts/midpoint_20260914/ck1_run/config.yaml"
+    }
+  },
+
+  "predictions_preregistered": [
+    ["VAE 的 SNR_lin", "偏低（平移非线性），A_max 显著——非线性度高的首例"],
+    ["DINO 的 SNR_lin", "相对更高（通道模式效应更线性）"],
+    ["V_repr(PushT-VAE)", "显著为正"],
+    ["Apex SNR_lin(Δ场景位移)", "不低（鼠标→视角近线性）"],
+    ["I-JEPA 病房", "按预注册方向判死"],
+    ["τ 闭式 vs 经验学习曲线", "同数量级"],
+    ["剂量公式@VAE 房", "小剂量，F 不低于 V1，成本低"],
+    ["剂量公式@DINO 房", "大剂量长疗程，F ≥ 0.159±0.006"]
+  ],
+
+  "execution_note": "全部脚本先写后不测；下次开卡在服务器冒烟（--smoke）后跑正。输出统一落 audit_v1，schema 前缀 nanowm-p1-*-v2。"
+}

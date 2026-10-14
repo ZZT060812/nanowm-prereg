@@ -1,0 +1,37 @@
+{
+ "schema": "nanowm-arms2k-protocol-v1",
+ "registered_at": "2026-10-04 17:1x (evening, before any arm readout; arms mid-training, no F-ratio computed)",
+ "context": "四臂同房（webdino 冻结编码器，dino_wm/pusht，nanowm_b2），seed 3407 单种子，2000 步；读数=冻结九探针 F-ratio @step2000（readout_chain 产出 fratio_<arm>_2k.json）",
+ "erratum_2026-10-04": "context 中 model 写 nanowm_b2 系注册笔误：第 7 次启动（webdino+b2）潜空间维度不匹配即败，四臂实际自 18:3x 起运行于 model=nanowm_b1_semantic + latent_codec.kind=webdino（与 dino①/②u/SufWM@10k 同构谱系，见同名 .md 误配事故段）。预测文本与判据不依赖 model 名，注册内容不变；病房字段（webdino）自始正确。",
+ "governance": "单种子方向性判读；任何主张升级前需种子复现+整程；打分入超级矩阵台账；连线：P4a↔双叙事 c/c'（若 2k 与 10k 复查均不分离→两版齐降），P4c↔判据 a/a'（翻转版升主），P4b↔UNCOND tax 段",
+ "rows": [
+  {
+   "id": "P4a",
+   "name": "early repair separation",
+   "prediction": "F(sufwm_nou@2k) ∈ [0.02, 0.15]（基准：F@10k=0.159，2k 为早期段）；baseline@2k 预期仍在崖底（<0.005）",
+   "criterion": "主判据=绝对带；<0.02 记「修复起效慢于剂量律 τ 所含」（τ 校准素材）；>0.15 记「起效快」；baseline 若 ≥0.01 记「崖底不稳」反常行",
+   "status": "pre-registered"
+  },
+  {
+   "id": "P4b",
+   "name": "UNCOND tax direction",
+   "prediction": "F(sufwm_nou@2k) ≥ F(sufwm_u@2k)（方向性；任务级 tax 0/10 vs 6/24 已知，场级 2k 早期同号预期）",
+   "criterion": "仅方向判读；单种子，反转不升级为结论、只登记",
+   "status": "pre-registered"
+  },
+  {
+   "id": "P4c",
+   "name": "aux-loss conversion (switch a/a' early)",
+   "prediction": "F(aux@2k) > 0.02 = aux 头早期即助转化（V2d 活，翻转版判据 a 拿到首份支持——全量 a/a' 仍需整程 F>1）；< 0.005 = 2k 内无早期效应（λ=0.1 偏小或需更长程，判据 a 延后不死）；中间=模糊",
+   "criterion": "三分档如左；与 baseline@2k 并读（baseline 预期崖底）",
+   "status": "pre-registered"
+  },
+  {
+   "id": "P4d",
+   "name": "aux vs sufwm ordering",
+   "prediction": "不设方向主张（激励机制修复 vs 辅助梯度塑形，机制不同）——仅登记观测",
+   "criterion": "observation-only，双向皆素材",
+   "status": "pre-registered (observational)"
+  }
+ ]
+}

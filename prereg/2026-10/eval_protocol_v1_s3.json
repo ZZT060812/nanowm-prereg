@@ -1,0 +1,92 @@
+{
+  "protocol_version": "frozen-v1",
+  "date_frozen": "2026-09-21",
+  "description": "\u9636\u6bb5\u4e00\u51bb\u7ed3\u534f\u8bae\uff1a\u56fa\u5b9a\u52a8\u4f5c\u63a2\u9488\u96c6 + \u663e\u5f0f\u79cd\u5b50\u8868\u3002\u6240\u6709 F-ratio \u6570\u5b57\u81ea\u6b64\u53ea\u4ece\u672c\u534f\u8bae\u4ea7\u51fa\u3002",
+  "num_clips": 16,
+  "num_sampling_steps": 50,
+  "variant_seeds": [
+    200,
+    201
+  ],
+  "noise_seeds": [
+    21000,
+    21001,
+    21002,
+    21003,
+    21004,
+    21005,
+    21006,
+    21007,
+    21008,
+    21009
+  ],
+  "shuffled_perm_seed": 20280921,
+  "probes": [
+    {
+      "name": "gt",
+      "type": "gt"
+    },
+    {
+      "name": "zeros",
+      "type": "zeros"
+    },
+    {
+      "name": "shuffled",
+      "type": "shuffled"
+    },
+    {
+      "name": "reversed",
+      "type": "reversed"
+    },
+    {
+      "name": "const_hold",
+      "type": "const_hold"
+    },
+    {
+      "name": "scaled_0.5",
+      "type": "scaled",
+      "factor": 0.5
+    },
+    {
+      "name": "scaled_2.0",
+      "type": "scaled",
+      "factor": 2.0
+    },
+    {
+      "name": "plus_q95",
+      "type": "axis_q95",
+      "sign": 1.0
+    },
+    {
+      "name": "minus_q95",
+      "type": "axis_q95",
+      "sign": -1.0
+    }
+  ],
+  "fast_override": {
+    "num_clips": 4,
+    "num_sampling_steps": 10,
+    "variant_seeds": [
+      0
+    ],
+    "noise_seeds": [
+      1000,
+      1001,
+      1002
+    ],
+    "probes": [
+      {
+        "name": "gt",
+        "type": "gt"
+      },
+      {
+        "name": "zeros",
+        "type": "zeros"
+      },
+      {
+        "name": "shuffled",
+        "type": "shuffled"
+      }
+    ]
+  }
+}

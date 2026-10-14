@@ -1,0 +1,129 @@
+{
+  "schema": "nanowm-g30-protocol-v1",
+  "protocol_version": "g30-prereg-v1",
+  "registered_at": "2026-10-04 16:30:11 +0800",
+  "frozen_before_any_computation": true,
+  "doc": "研究文档/论文升级思考_2026-10-04.md §三（匹配滤波定律推导）、§四 G30、§六C",
+  "inherits": "p1_protocol_v2.json 的统计纪律（同数据、同 ridge λ、同 t_bands）；AFS 经验口径继承 audit_v1 归因输出",
+
+  "law": {
+    "name": "贝叶斯证据谱的匹配滤波定律（G18 更正版，G30 载体）",
+    "model": "线性高斯潜世界 z' = Az + Ba + w, w~N(0, sigma_w^2 I), x_t = sqrt(abar_t) z' + sqrt(1-abar_t) eps",
+    "shrinkage": "s(t) = (1-abar_t)/(1-abar_t+abar_t*sigma_w^2)",
+    "evidence_envelope": "g2(abar) = abar*(1-abar)/(1-abar+abar*sigma_w^2)^2",
+    "matched_filter_peak": "abar_star = 1/(1+sigma_w^2)",
+    "verification_status": "峰位闭式 vs 数值扫描 <1e-9；K-公式后验均值 vs 联合高斯条件均值 <1e-15；同一 x_t 上恒等式 <1e-15（本机已验）"
+  },
+
+  "estimators_frozen": {
+    "note": "G30 治理段 (b)：sigma_w^2 正式估计量在此写死；估计量输入由 snr_fast 扩块（修复清单 A 项）dump，逐 codec 冻结。",
+    "sigma_w_sq_estimator": {
+      "definition": "sigma_w_sq_est = (1 - A_lin) / A_lin，其中 A_lin 为 train split 上 ridge 拟合 delta_z ≈ B·a 的逐维 R² 均值（动作块标准化；Y=delta_z 每维标准化；λ=1e-4·trace(X^T X)/d，与 snr_fast/ridge_r2 完全同参）",
+      "equivalent_form": "等于每维标准化后的 sum_j Var(r_j) / sum_j Var((Ba)_j)，r 为 train 回归残差",
+      "consistency_check": "与 §三后验核对的 (1-A_max)/A_max ≈ (1-0.173)/0.173 ≈ 4.8 同式，历史读数直接可比",
+      "dump_spec": "snr_fast 新增 JSON 键 g30_dump：{W (B 的 ridge 估计, a标准化→Y标准化映射), resid_var_per_dim (train 每维残差方差), sigma_w_sq_est, a_lin_used}"
+    },
+    "deficit_D": {
+      "primary": "D_raw(t) = log[ AFS_Bayes(t) / AFS_learned(t) ]，AFS_Bayes(t) = g2(abar_t)·||Ba||^2_codec（||Ba||^2 取该 codec 冻结 dump），AFS_learned(t) 为 audit_v1 经验归因带形（原始绝对值口径）",
+      "scale_free": "D_shape(t) = log[ g2(abar_t)/max_t g2 ] − log[ AFS_learned(t)/max_t AFS_learned ]（双峰归一，谱形版；‖Ba‖² 常数在 argmax 与谱形比较中消去）",
+      "L_normalized": "D_L(t) = log[ g2(abar_t)/max_t g2 ] − log[ AFS_attr_per_L(t)/max_t AFS_attr_per_L ]，AFS_attr_per_L 为 B 项重算的每带 L 归一化带形（attr/L，recalc）",
+      "within_term_caveat": "治理段 (a)：经验 AFS 是 between/within 比值，Bayes 侧 within 项（ε̂ 跨探针方差）闭式未推导——判据因此以谱形版 D_shape 与每带归一版 D_L 为主读数，D_raw 为敏感性读数并在结果中并排报告"
+    },
+    "t_star_mapping": "t*_codec：由该 codec 冻结的 sigma_w_sq_est 得 abar_star = 1/(1+sigma_w_sq_est)，在 B 项提取的 cosine ᾱ_t 表（T=1000，含参数 s）上反解 t。若 dump 缺失，用 §三括号回退：A_max∈[0.173, ~0.45] ⟹ abar_star∈[0.17, 0.45] ⟹ t*∈[≈500, ≈730]；DINO 型按 A_max≈0.40–0.45 ⟹ t* ≤ ≈525",
+    "shared_t_grid": "p1b_v1 冻结五带 [0,200],[200,400],[400,600],[600,800],[800,1000]，带中心 {100,300,500,700,900}；'≥80% 的共享 t 网格' = ≥4/5 带；若产出更细网格则按 ≥80% 网格点计，写进结果 run 块",
+    "ignition_band": "t ∈ [800, 1000]（SufWM 点火带，F9）",
+    "ward_codec_referents": {
+      "DINO1_baseline": "dino1_10k 检查点 + webdino codec（P1/P2 的 DINO① 对照）",
+      "VAE_referent": "vae1 系检查点 + sd_vae codec",
+      "SufWM": "dinosuf_10k 检查点 + webdino codec（P2 修复臂）"
+    }
+  },
+
+  "predictions_preregistered": [
+    {
+      "id": "P1",
+      "title": "赤字谱：DINO① 全带深亏且最深处在匹配带附近",
+      "registered_at": "2026-10-04 16:30:11 +0800",
+      "status": "pre-registered",
+      "prediction": "D(t) 在 DINO① 全带深亏（≥ VAE 同带），最深处在匹配带附近",
+      "criteria": {
+        "P1a_全带深亏": "D_DINO(t) ≥ D_VAE(t) 于 ≥80% 的共享 t 网格（≥4/5 带）；主读数 D_shape，敏感性读数 D_raw 并排（‖Ba‖² 偏移影响 D_raw 的跨 codec 绝对比较，须注明）",
+        "P1b_最深近匹配带": "t_deep = argmax_t D_DINO(t) 满足 |t_deep − t*_DINO| ≤ 200（一个带宽）；t*_DINO 由冻结 sigma_w_sq_est 反解；若 dump 缺失则回退判据 t_deep ∈ [325, 730]",
+        "P1c_通过判定": "P1a 与 P1b 同时成立 = P1 通过；仅 P1a 成立 = 部分支持（深亏成立、峰位不支持），逐条登记不入总分"
+      },
+      "data_files": {
+        "snr_dump_sigma_w": "/root/autodl-fs/nanowm/ckpts/audit_v1/snr_pusht.json#g30_dump (A 项产出，占位)",
+        "alpha_bar_table": "/root/autodl-fs/nanowm/ckpts/audit_v1/alpha_bar_table_T1000.json (B 项产出，占位)",
+        "afs_learned_DINO": "/root/autodl-fs/nanowm/ckpts/audit_v1/ (attr/afs 带形 JSON，B 项盘点回填，占位)",
+        "afs_learned_VAE": "/root/autodl-fs/nanowm/ckpts/audit_v1/ (同上，占位)",
+        "D_spectra_output": "/root/autodl-fs/nanowm/ckpts/audit_v1/g30_deficit_spectra.json (计算后生成，当前不存在)"
+      }
+    },
+    {
+      "id": "P2",
+      "title": "修复谱：SufWM 的 D(t) 在点火带先收缩；attr/L 重算的点火偏峰分支",
+      "registered_at": "2026-10-04 16:30:11 +0800",
+      "status": "pre-registered",
+      "prediction": "SufWM 的 D(t) 在点火带（800–1000）先收缩；attr/L 重算后若峰仍在 800–1000，则记『点火偏峰』证据（接 G22/R9）",
+      "criteria": {
+        "P2a_点火带收缩方向": "D_SufWM 于点火带 [800,1000] 的带均值 < D_DINO① 同带带均值（主读数 D_shape；D_L 敏感性并排）",
+        "P2b_先收缩": "点火带收缩量 Δ_ign = mean(D_DINO①; 800–1000) − mean(D_SufWM; 800–1000) 为五带收缩量中的最大者（『先』= 最大收缩落在点火带）",
+        "P2c_attr_L分支判读": "attr/L 每带归一化重算（B 项，recalc）后：(i) 若 SufWM 谱峰 argmax_t 移回 [400,800] → 定律干净兑现分支，P2 全通过；(ii) 若 argmax_t 仍在 [800,1000] → 记『点火偏峰』(ignition off-peak) 证据条目（接 G22 ρ 指数与 R9 ②u 场向错误分配），该分支为双向有信息登记，不算 P2 失败",
+        "P2_通过判定": "P2a 且 P2b 成立 = P2 通过；P2c 两分支各自登记，标注 branch(i)/branch(ii)"
+      },
+      "data_files": {
+        "snr_dump_sigma_w": "/root/autodl-fs/nanowm/ckpts/audit_v1/snr_pusht.json#g30_dump (A 项产出，占位)",
+        "alpha_bar_table": "/root/autodl-fs/nanowm/ckpts/audit_v1/alpha_bar_table_T1000.json (B 项产出，占位)",
+        "afs_source": "/root/autodl-fs/nanowm/ckpts/audit_v1/ (AFS/attr 原始带形，占位)",
+        "attr_per_L_recalc": "/root/autodl-fs/nanowm/ckpts/audit_v1/ (B 项重算 JSON，键名含 recalc，占位)",
+        "D_spectra_output": "/root/autodl-fs/nanowm/ckpts/audit_v1/g30_deficit_spectra.json (占位)"
+      }
+    },
+    {
+      "id": "P3",
+      "title": "谱定向：V2a 投喂 ᾱ* 匹配带优于均匀与高噪带投喂",
+      "registered_at": "2026-10-04 16:30:11 +0800",
+      "status": "pre-registered",
+      "prediction": "V2a 投喂 ᾱ* 匹配带（VAE 型病房 t∈[≈500,≈730]，括号来自 A_max∈[0.173,~0.45]；DINO 型 t*≤≈525）优于均匀投喂与高噪带投喂",
+      "criteria": {
+        "arms": "三臂同预算同种子（n≥3 种子，与修复臂现行种子纪律一致）：(1) matched：VAE 型 t∈[500,730]；DINO 型以冻结 t*_DINO 为中心 ±100（∩[0,1000]）；(2) uniform：t∈[0,1000] 均匀；(3) highnoise：t∈[800,1000]",
+        "P3a_方向判据": "主终点 = 冻结协议场级 F（F-ratio）：F_matched > F_uniform 且 F_matched > F_highnoise 于 ≥2/3 种子",
+        "P3b_幅度参考": "三种子均值相对优势 matched/uniform ≥ 1.10 且 matched/highnoise ≥ 1.10（描述性，非门槛）",
+        "P3c_次终点": "AFS 总量（动作场能）同向：matched 为三臂最大",
+        "P3_通过判定": "P3a 成立 = P3 通过；P3c 同向为加强；反向（matched 低于任一臂于 ≥2/3 种子）= P3 破功，登记",
+        "soft_bracket_note": "G30 反驳条：σ_w² 估计量未定稿前 P3 括号是软的——本协议经 A 项 dump 已把估计量写死，V2a 启动前以冻结 sigma_w_sq_est 反解的 t* 为准并回填本行（amendment 机制），不得跑后改带"
+      },
+      "data_files": {
+        "v2a_matched_runs": "/root/autodl-fs/nanowm/ckpts/ (V2a 匹配带投喂 run 记录，占位，未启动)",
+        "v2a_uniform_runs": "/root/autodl-fs/nanowm/ckpts/ (V2a 均匀投喂 run 记录，占位，未启动)",
+        "v2a_highnoise_runs": "/root/autodl-fs/nanowm/ckpts/ (V2a 高噪带投喂 run 记录，占位，未启动)",
+        "snr_dump_sigma_w": "/root/autodl-fs/nanowm/ckpts/audit_v1/snr_pusht.json#g30_dump (A 项产出，占位)",
+        "alpha_bar_table": "/root/autodl-fs/nanowm/ckpts/audit_v1/alpha_bar_table_T1000.json (B 项产出，占位)"
+      }
+    }
+  ],
+
+  "postdictions_logged": [
+    {
+      "id": "P0",
+      "title": "VAE 实测归因峰带（600–800）与 ᾱ* 区间相容",
+      "registered_at": "2026-10-04（后验核对，见 §三；先于本协议但晚于数据观测——如实标注）",
+      "status": "postdiction-not-counted",
+      "content": "ᾱ(600)=0.34、ᾱ(800)=0.094 ⟹ 峰位反推 σ_w²∈[1.9, 9.6]；独立路径 σ_w²≈(1−A_max)/A_max≈4.8 同量级、区间相含。论文写作按 'one postdiction and three pre-registered tests' 口径"
+    }
+  ],
+
+  "open_caveats": [
+    "(a) 经验 AFS 是 between/within 比值，Bayes 模型 within 项（ε̂ 跨探针方差）闭式待推导并与协议定义对齐——判据以谱形版为主读数（见 estimators_frozen.deficit_D.within_term_caveat）",
+    "(b) 非线性世界的局限照 G18 原反驳：Ba 线性拟合 ⟹ 地板是下界 ⟹ D(t) 是赤字下界",
+    "(c) P3 括号软化注记见 P3.criteria.soft_bracket_note；比值口径推导未闭前 D_raw 只作敏感性读数"
+  ],
+
+  "amendment_rule": "本文件判定标准在对应计算开始后不得修改；任何补充以新增 amendment 键追加并保留原文与时间戳。D(t) 计算产出必须带 run 块（时间戳/代码版本/输入文件哈希），无 run 块的读数不进论文（provenance 门，R18 纪律）。",
+
+  "execution_map": {
+    "A_snr_fast_extension": "src/tools/snr_fast.py 扩块：g30_dump（W、每维残差方差、sigma_w_sq_est）+ G29 分箱拟合（位姿五分位 × 箱内 ridge × 方向弥散）——additive 新键，不改既有键",
+    "B_alpha_table_attrL": "ᾱ_t 表提取（T=1000，cosine，公式与 s 参数入 JSON）+ attr/L 每带归一化带形重算（recalc 键）",
+    "computation_gate": "C（本文件）落盘先于 A/B 的任何 D(t)/σ_w² 数值计算；A/B 的 dump 与重算本身为仪器制备，不产出判定读数"
+  }
+}
