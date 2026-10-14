@@ -1,0 +1,41 @@
+{
+  "schema": "census-prevalence-prereg-v1",
+  "frozen_at": "2026-10-14T20:56:14",
+  "status": "FROZEN-BEFORE-ANY-PROBE",
+  "authority": "用户拍板 2026-10-14：主行 60%，阈值 0.10/0.03，LIBERO 上（本文件为普查开跑前置件）",
+  "scope": {
+    "census_list": "研究文档/普查编码器清单_v1_2026-10-13.md（第 0 批 VLA 优先 + 第一批 30 + 第二批视频 tokenizer）",
+    "environment_primary": "PushT（与既有五病房同环境/同动作集/同探针协议族）",
+    "environment_second": "LIBERO demo 转移（探针级双环境行，见 libero 节）",
+    "denominator_rule": "分母=成功出读数的编码器；适配器阻塞/下载失败剔除且必须报告剔除数；灰带不计入分子分母"
+  },
+  "thresholds": {
+    "alive": "RMI >= 0.10 nat",
+    "dead": "RMI < 0.03 nat",
+    "gray_band": "0.03-0.10（单列报告，不进主张）",
+    "instrument": "L1 探针三件套：RMI（高斯族变分下界）+ A_lin 快档 + 支撑谱；跑前 ckpt 指纹校验"
+  },
+  "predictions": [
+    {"id": "P-prev-1", "row": "主行", "prediction": "第 0+1 批（目标 n≈36）判活比例 >= 60%", "scoring": "实测/预测比值 ∈ [0.5,2] 记命中"},
+    {"id": "P-prev-2", "row": "副行", "prediction": "无单一家族全灭（每个范式轴含 VLA 塔轴 >=1 判活）", "scoring": "布尔"},
+    {"id": "P-prev-3", "row": "中位行", "prediction": "判活组 RMI 中位数 >= 0.30 nat", "scoring": "实测/预测比值 ∈ [0.5,2] 记命中"},
+    {"id": "P-prev-4", "row": "双环境行", "prediction": "LIBERO 与 PushT 的判活/判死判决一致率 >= 80%（同编码器清单、灰带双向排除）", "scoring": "实测/预测比值 ∈ [0.5,2] 记命中"}
+  ],
+  "bidirectional_framing": {
+    "majority_alive": "trainers-not-encoders 获普查级支撑 → 摘要口径句升级（five families → N/M surveyed），翻转版标题可用",
+    "majority_dead": "审计决策价值升格（避免注定失败的修复） → 守正版 Conclusion 强化",
+    "note": "两向都为正面结果；解封后按实测方向写，不改判读规则"
+  },
+  "libero": {
+    "decision": "上（用户 2026-10-14 拍板）",
+    "design": "LIBERO 公开 demo（含动作标签）作为 L1 探针的第二环境输入；零训练，分钟级/编码器",
+    "cost": "1-2 天工程（安装+demo 下载+codec 适配器复用）+ GPU <1h",
+    "paper_claim": "audit verdicts replicate on a second environment family (zero-training probes)；修复与 CEM 层仍 PushT 单环境（Limitations 口径不变）",
+    "engineering_owner": "部署会话（与权重传输并行，不占 H100 档期）"
+  },
+  "notes": [
+    "本文件冻结时权重仍在传输（第 0 批部分本地已下），普查探针零读数——预注册顺序合法",
+    "sha256 由部署会话在服务器侧落盘时记录进 run block",
+    "命中/失手均入内部台账；论文引用按'填格或中性句'政策（不留红）"
+  ]
+}
