@@ -1,0 +1,58 @@
+{
+ "schema": "anchor-fingerprint-v1",
+ "utc": "2026-10-15T05:42:42Z",
+ "method": "size + mid-8MB md5",
+ "targets": {
+  "webdino_Base": {
+   "path": "ckpts/20260915_101703-NanoWM-B-1-Semantic-F4S5-pusht/checkpoints/latest/latest-epoch=0-step=10000.ckpt",
+   "size": 1921984411,
+   "mid8m_md5": "90aa0b6273f3"
+  },
+  "SufWM_clean": {
+   "path": "ckpts/sufwm10k_clean/latest_step10000.ckpt",
+   "size": 1921985115,
+   "mid8m_md5": "db0f217cbfc0"
+  },
+  "SufWM_seed3408": {
+   "path": "ckpts/sufwm_seed3408/latest_step10000.ckpt",
+   "size": 1921985115,
+   "mid8m_md5": "b4a835b58b9b"
+  },
+  "SufWM_seed3409": {
+   "path": "ckpts/sufwm_seed3409/latest_step10000.ckpt",
+   "size": 1921985115,
+   "mid8m_md5": "c59d25e28151"
+  },
+  "webdino_dose045": {
+   "path": "ckpts/20260921_230201-NanoWM-B-1-Semantic-F4S5-pusht/checkpoints/latest/latest-epoch=0-step=10000.ckpt",
+   "size": 1921985115,
+   "mid8m_md5": "db0f217cbfc0"
+  }
+ },
+ "v0_d025_candidates": {
+  "results/20261010_074954-NanoWM-B-2-F4S5-pusht/checkpoints/latest/latest-epoch=0-step=10000.ckpt": {
+   "size": 2238107371,
+   "mid8m_md5": "dfc63d9a28ab"
+  },
+  "results/20261010_002638-NanoWM-B-2-F4S5-pusht/checkpoints/latest/latest-epoch=0-step=10000.ckpt": {
+   "size": 2238107371,
+   "mid8m_md5": "4b3a65f9e41a"
+  },
+  "results/20261010_080220-NanoWM-B-2-F4S5-pusht/checkpoints/latest/latest-epoch=0-step=10000.ckpt": {
+   "size": 2238107371,
+   "mid8m_md5": "4df810826b68"
+  },
+  "results/20261010_041407-NanoWM-B-2-F4S5-pusht/checkpoints/latest/latest-epoch=0-step=10000.ckpt": {
+   "size": 2238107371,
+   "mid8m_md5": "f1641c008c71"
+  },
+  "results/20261010_042034-NanoWM-B-2-F4S5-pusht/checkpoints/latest/latest-epoch=0-step=10000.ckpt": {
+   "size": 2238107371,
+   "mid8m_md5": "14ebd5d8781f"
+  },
+  "results/20261010_002640-NanoWM-B-2-F4S5-pusht/checkpoints/latest/latest-epoch=0-step=10000.ckpt": {
+   "size": 2238107371,
+   "mid8m_md5": "5e760f8a7c58"
+  }
+ }
+}
